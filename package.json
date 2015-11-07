@@ -1,0 +1,17 @@
+{
+  "name": "dp",
+  "version": "0.1.0-SNAPSHOT",
+  "scripts": {
+    "start": "node ./node_modules/gulp/bin/gulp"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "glob": "^4.0.5",
+    "gulp": "git://github.com/gulpjs/gulp.git#4.0",
+    "gulp-concat": "^2.3.3",
+    "gulp-inject": "^1.0.1",
+    "gulp-replace": "^0.5.3",
+    "del": "^2.0.2",
+    "gulp-shell": "^0.5.1"
+  }
+}

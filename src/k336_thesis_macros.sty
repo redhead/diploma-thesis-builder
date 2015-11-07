@@ -1,0 +1,181 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength\hoffset{-10pt}
+\setlength\voffset{-\baselineskip}
+\normalsize
+\setlength\textwidth{40em}
+
+\setlength\topmargin{0pt}
+\setlength\headheight{\baselineskip}
+\setlength\headsep{2\baselineskip}
+\setlength\topskip{\baselineskip}
+\setlength\textheight{45\baselineskip}
+\addtolength\textheight{\topskip}       %calc.sty avoided
+\setlength\footskip{3\baselineskip}
+\setlength\evensidemargin{0pt}
+\setlength\oddsidemargin{37.5pt}
+\setlength\marginparsep{0pt}
+\setlength\marginparwidth{0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\def\ifndef#1{\expandafter\ifx\csname#1\endcsname\relax} % check whether macro is defined
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\coverpagestarts
+{\cleardoublepage
+\pagenumbering{roman}\thispagestyle{empty}\setcounter{page}{3}
+\begin{center}
+\large\rmfamily
+\University\\
+\Faculty\\
+\Department\\
+\vglue 10mm
+\includegraphics[width=50mm]{figures/LogoCVUT}
+\vglue 30mm
+{\large \TypeOfWork}\\
+\bigskip
+{\Large\bf \WorkTitle}\\
+\bigskip
+\bigskip
+{\Large\it \FirstandFamilyName}\\
+\vfill
+\item[\labelSupervisor:]\ \Supervisor\\
+\vglue 15mm
+{\labelStudProgram: \StudProgram}\\
+\bigskip
+{\labelStudBranch: \StudBranch}\\
+\bigskip
+\today
+\end{center}
+\newpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\mainbodystarts{
+\cleardoublepage
+\fancyhead{} % clear all header fields
+\fancyhead[LE]{\slshape \leftmark}
+\fancyhead[RO]{\slshape \rightmark }
+\pagestyle{fancy}\pagenumbering{arabic}\setcounter{page}{1}
+\normalfont
+\parskip=0.2\baselineskip plus 0.2\baselineskip minus 0.1\baselineskip
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%A list of user hyphenations.
+\input{hyphen.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ceske uvozovky
+\chardef\clqq=18 \sfcode18=0
+\chardef\crqq=16 \sfcode16=0
+\def\uv#1{\clqq#1\crqq}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\acknowledgements}{
+\cleardoublepage
+\vspace*{\fill}
+\noindent
+{\huge \textbf{%
+\iflanguage{czech}{Poděkování}{Aknowledgements}%
+}}
+\vspace{3ex}\par
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\declaration}[1]{
+\cleardoublepage
+\vspace*{\fill}
+\noindent
+{\huge \textbf{%
+\iflanguage{czech}{Prohlášení}{Declaration}%
+}}
+\vspace{3ex}\par
+\noindent
+\iflanguage{czech}{%
+Prohlašuji, že jsem předloženou práci vypracoval samostatně a že jsem uvedl veškeré použité informační zdroje v souladu
+s Metodickým pokynem o dodržování etických principů při přípravě vysokoškolských závěrečných prací.%
+}{%
+\noindent
+I hereby declare that I have completed this thesis independently and that I have listed all the literature and publications used.\\
+I have no objection to usage of this work in compliance with the act \S 60 Zákon č.~121/2000Sb. (copyright law), and with the rights connected with the copyright act including the changes in the act.%
+}
+\\[15mm]
+#1 \hfill \hbox to 70mm{\tiny\dotfill}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\abstractpage}{
+\cleardoublepage
+\noindent
+%{\Huge \textbf{Abstract}}
+%\vspace{8ex}
+\chapter*{Abstract}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% zada kapitolu s Literaturou do obsahu
+\def\@openbib@code{\addcontentsline{toc}{chapter}{\bibname}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% upravuje výpis seznamu zkratek
+\makeatletter							
+\renewcommand{\thenomenclature}{%
+  \@ifundefined{chapter}%
+  {
+    \section{\nomname}
+   }%
+  {
+    \chapter{\nomname}
+  }%
+
+  \nompreamble
+  \list{}{%
+    \labelwidth\nom@tempdim
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \itemsep\nomitemsep
+    \let\makelabel\nomlabel}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% výpis typu práce
+
+\def \translate{
+	\iflanguage{czech}{
+		 \typeout{************************************************}
+		 \typeout{Zvoleny jazyk: cestina}
+		 \typeout{Typ prace: \TypeOfWork}
+		 \typeout{Studijni program: \StudProgram}
+		 \typeout{Obor: \StudBranch}
+		 \typeout{Jmeno: \FirstandFamilyName}
+		 \typeout{Nazev prace: \WorkTitle}
+		 \typeout{Vedouci prace: \Supervisor}
+		 \typeout{***************************************************}
+		 \newcommand\Department{Katedra počítačů}
+		 \newcommand\Faculty{Fakulta elektrotechnická}
+		 \newcommand\University{České vysoké učení technické v Praze}
+		 \newcommand\labelSupervisor{Vedoucí práce}
+		 \newcommand\labelStudProgram{Studijní program}
+		 \newcommand\labelStudBranch{Obor}
+		 \renewcommand\nomname{Seznam použitých zkratek}
+	}{
+		 \typeout{************************************************}
+		 \typeout{Language: english}
+		 \typeout{Type of Work: \TypeOfWork}
+		 \typeout{Study Program: \StudProgram}
+		 \typeout{Study Branch: \StudBranch}
+		 \typeout{Author: \FirstandFamilyName}
+		 \typeout{Title: \WorkTitle}
+		 \typeout{Supervisor: \Supervisor}
+		 \typeout{***************************************************}
+		 \newcommand\Department{Department of Computer Science and Engineering}
+		 \newcommand\Faculty{Faculty of Electrical Engineering}
+		 \newcommand\University{Czech Technical University in Prague}
+		 \newcommand\labelSupervisor{Supervisor}
+		 \newcommand\labelStudProgram{Study Programme} 
+		 \newcommand\labelStudBranch{Field of Study}
+	}
+}
