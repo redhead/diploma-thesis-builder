@@ -3,85 +3,114 @@ var gulp = require('gulp');
 var fs = require('fs');
 var del = require('del');
 var replace = require('gulp-replace');
+var iff = require('gulp-if');
 var exec = require('child_process').exec;
 
 var build = "./build";
+var print = "./print";
 var src = "./src";
 
-var originalAuthoreaFile = build + '/Diploma Thesis.tex';
-var contentFile = build + '/content.tex';
+var originalAuthoreaFile = '/Diploma Thesis.tex';
+var contentFile = '/content.tex';
 var mainTexFile = 'DP.tex';
-var pdfFile = build + '/DP.pdf';
+var pdfFile = '/DP.pdf';
 
-gulp.task('doc-content', function(done) {
-	var fileContent = fs.readFileSync(originalAuthoreaFile, "utf8");
+function createTasks(_, folder, options) {
 
-	var i1 = fileContent.indexOf('\n\n\n\n\n');
-	var i2 = fileContent.indexOf('\\end{document}');
+	function gulptask(name, task) {
+		return gulp.task(name + _, task);
+	}
 
-	var document = fileContent.substring(i1, i2);
+	function gulpseries() {
+		var names = [];
+		[].slice.call(arguments).forEach(function(name) {
+			names.push(name + _);
+		});
+		return gulp.series.apply(gulp, names);
+	}
 	
-	fs.writeFile(contentFile, document, function(err) {
-		if(err) {
+	gulptask('doc-content', function(done) {
+		var fileContent = fs.readFileSync(folder + originalAuthoreaFile, "utf8");
+
+		var i1 = fileContent.indexOf('\n\n\n\n\n');
+		var i2 = fileContent.indexOf('\\end{document}');
+
+		var document = fileContent.substring(i1, i2);
+		
+		fs.writeFile(folder + contentFile, document, function(err) {
+			if(err) {
+				done();
+				return console.log(err);
+			}
+
 			done();
-			return console.log(err);
-		}
+		}); 
+	});
 
-		done();
-	}); 
+	gulptask('replace', function() {
+		return gulp.src(folder + contentFile)
+			.pipe(replace('\\section', '\\chapter'))
+			.pipe(replace('\\subsection', '\\section'))
+			.pipe(replace('\\subsubsection', '\\subsection'))
+			.pipe(replace(/\s---\s/g, '---'))
+			.pipe(gulp.dest(folder));
+	});
 
-});
+	gulptask('inject', function() {
+		var content = fs.readFileSync(folder + '/content.tex', "utf8");
 
-gulp.task('replace', function() {
-	return gulp.src(contentFile)
-		.pipe(replace('\\section', '\\chapter'))
-		.pipe(replace('\\subsection', '\\section'))
-		.pipe(replace('\\subsubsection', '\\subsection'))
-		.pipe(gulp.dest(build));
-});
+		return gulp.src(folder + '/DP.tex')
+			.pipe(replace('%%% DOC_CONTENT %%%', content))
+			.pipe(iff(!options.links, replace('colorlinks=true', 'colorlinks=false')))
+			.pipe(iff(options.zadani, replace('%\\pagenumbering', '\\pagenumbering')))
+			.pipe(iff(options.zadani, replace('%\\includepdf{zadani.pdf}', '\\includepdf{zadani.pdf}')))
+			.pipe(gulp.dest(folder));
+	});
 
-gulp.task('inject', function() {
-	var content = fs.readFileSync(build + '/content.tex', "utf8");
-
-	return gulp.src(build + '/DP.tex')
-		.pipe(replace('%%% DOC_CONTENT %%%', content))
-		.pipe(gulp.dest(build));
-});
-
-gulp.task('pdf', function(done) {
-	exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: build}, function (err, stdout, stderr) {
-		console.log(stdout);
-
-		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: build}, function (err, stdout, stderr) {
+	gulptask('pdf', function(done) {
+		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
 			console.log(stdout);
 
-			exec('"' + pdfFile + '"', function (err, stdout, stderr) {
+			exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
+				console.log(stdout);
 				done();
 			});
 		});
+	})
+
+
+	gulptask('show', function(done) {
+		exec('"' + folder + pdfFile + '"', function (err, stdout, stderr) {
+			done();
+		});
+	})
+
+
+	gulptask('copy', function() {
+		return gulp.src(src + '/**/*')
+			.pipe(gulp.dest(folder));
 	});
-})
 
+	gulptask('clean-build', function(done) {
+		var files = del.sync(folder + '/**/*');
+		done();
+	});
 
-gulp.task('copy', function() {
-	return gulp.src(src + '/**/*')
-		.pipe(gulp.dest(build));
-});
+	gulptask('prepare-document', gulpseries('doc-content', 'replace'));
 
-gulp.task('clean-build', function(done) {
-	var files = del.sync(build + '/**/*');
-	done();
-});
+	gulptask('compile', gulpseries('prepare-document', 'inject', 'pdf'));
 
-gulp.task('prepare-document', gulp.series('doc-content', 'replace'));
+	gulptask('build', gulpseries('clean-build', 'copy', 'compile'));
 
-gulp.task('compile', gulp.series('prepare-document', 'inject', 'pdf'));
+}
 
-gulp.task('build', gulp.series('clean-build', 'copy', 'compile'));
+createTasks('_pdf', build, {links: true, zadani: true});
+createTasks('_print', print, {links: false, zadani: false});
 
-
-gulp.task('default', 
-	gulp.series('build'/*, 'show'*/)
+gulp.task('default', gulp.parallel(
+		gulp.series('build_pdf', 'show_pdf'),
+		gulp.series('build_print')
+	)
 );
 
 

@@ -11,6 +11,7 @@
     "gulp-concat": "^2.3.3",
     "gulp-inject": "^1.0.1",
     "gulp-replace": "^0.5.3",
+    "gulp-if": "^2.0.0",
     "del": "^2.0.2",
     "gulp-shell": "^0.5.1"
   }
