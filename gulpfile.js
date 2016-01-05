@@ -12,7 +12,7 @@ var src = "./src";
 
 var originalAuthoreaFile = '/Diploma Thesis.tex';
 var contentFile = '/content.tex';
-var mainTexFile = 'DP.tex';
+var mainTexFile = 'DP';
 var pdfFile = '/DP.pdf';
 
 function createTasks(_, folder, options) {
@@ -33,7 +33,11 @@ function createTasks(_, folder, options) {
 		var fileContent = fs.readFileSync(folder + originalAuthoreaFile, "utf8");
 
 		var i1 = fileContent.indexOf('\n\n\n\n\n');
-		var i2 = fileContent.indexOf('\\end{document}');
+		var i2 = fileContent.indexOf('\\bibliography{');
+
+		if (i2 == -1) {
+			i2 = fileContent.indexOf('\\end{document}');
+		}
 
 		var document = fileContent.substring(i1, i2);
 		
@@ -53,6 +57,7 @@ function createTasks(_, folder, options) {
 			.pipe(replace('\\subsection', '\\section'))
 			.pipe(replace('\\subsubsection', '\\subsection'))
 			.pipe(replace(/\s---\s/g, '---'))
+			.pipe(replace(/(figures\/([^\/]+)\/([^\/]+)caption\{[^\}]+)/g, '$1\\label{$2}'))
 			.pipe(gulp.dest(folder));
 	});
 
@@ -69,12 +74,13 @@ function createTasks(_, folder, options) {
 
 	gulptask('pdf', function(done) {
 		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
-			console.log(stdout);
-
-			exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
-				console.log(stdout);
-				done();
-			});
+		exec('bibtex ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
+		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
+		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
+			done();
+		});
+		});
+		});
 		});
 	})
 
