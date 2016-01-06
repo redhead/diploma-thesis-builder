@@ -58,6 +58,8 @@ function createTasks(_, folder, options) {
 			.pipe(replace('\\subsubsection', '\\subsection'))
 			.pipe(replace(/\s---\s/g, '---'))
 			.pipe(replace(/(figures\/([^\/]+)\/([^\/]+)caption\{[^\}]+)/g, '$1\\label{$2}'))
+			.pipe(replace('\\begin{verbatim}', '\\begin{lstlisting}[caption={},label={},captionpos=b,float,floatplacement=H]'))
+			.pipe(replace('\\end{verbatim}', '\\end{lstlisting}'))
 			.pipe(gulp.dest(folder));
 	});
 
@@ -82,14 +84,14 @@ function createTasks(_, folder, options) {
 		});
 		});
 		});
-	})
+	});
 
 
 	gulptask('show', function(done) {
-		exec('"' + folder + pdfFile + '"', function (err, stdout, stderr) {
+		exec('"' + folder + pdfFile + '"', function () {
 			done();
 		});
-	})
+	});
 
 
 	gulptask('copy', function() {
@@ -98,7 +100,7 @@ function createTasks(_, folder, options) {
 	});
 
 	gulptask('clean-build', function(done) {
-		var files = del.sync(folder + '/**/*');
+		del.sync(folder + '/**/*');
 		done();
 	});
 
