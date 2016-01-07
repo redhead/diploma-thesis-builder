@@ -57,7 +57,7 @@ function createTasks(_, folder, options) {
 			.pipe(replace('\\subsection', '\\section'))
 			.pipe(replace('\\subsubsection', '\\subsection'))
 			.pipe(replace(/\s---\s/g, '---'))
-			.pipe(replace(/(figures\/([^\/]+)\/([^\/]+)caption\{[^\}]+)/g, '$1\\label{$2}'))
+			.pipe(replace(/(figures\/([^\/]+)\/([^\/]+)caption\{[^%]+)/g, '$1\\label{fig:$2}'))
 			.pipe(replace('\\begin{verbatim}', '\\begin{lstlisting}[caption={},label={},captionpos=b,float,floatplacement=H]'))
 			.pipe(replace('\\end{verbatim}', '\\end{lstlisting}'))
 			.pipe(gulp.dest(folder));
@@ -77,9 +77,11 @@ function createTasks(_, folder, options) {
 	gulptask('pdf', function(done) {
 		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
 		exec('bibtex ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
+		exec('makeindex ' + mainTexFile + '.nlo -s nomencl.ist -o ' + mainTexFile + '.nls', {cwd: folder}, function (err, stdout, stderr) {
 		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
 		exec('pdflatex -synctex=1 -interaction=nonstopmode ' + mainTexFile, {cwd: folder}, function (err, stdout, stderr) {
 			done();
+		});
 		});
 		});
 		});
@@ -110,7 +112,7 @@ function createTasks(_, folder, options) {
 
 	gulptask('build', gulpseries('clean-build', 'copy', 'compile'));
 
-}
+};
 
 createTasks('_pdf', build, {links: true, zadani: true});
 createTasks('_print', print, {links: false, zadani: false});
