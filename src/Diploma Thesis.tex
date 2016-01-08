@@ -238,7 +238,7 @@ much in typical software development. As stated previously, most of the
 applications use the concept of current state that is usually persisted
 in, for example, a relational database. That is the reason why most
 developers tend to think about the state in a structural sense such as
-in Figure \ref{fig:relational-model}. In an online shopping application,
+in Figure~\ref{fig:relational-model}. In an online shopping application,
 for instance, a model of a purchase order could look like that.
 
 
@@ -298,7 +298,7 @@ core concept for system state transitioning. That means the source for a
 system's state is the audit log, a list of events, in the first place.
 From this log the current state of the application can be computed, much
 like the account balance is computed from the list of account entries.
-For example, see the Figure \ref{fig:events}. This computed value would
+For example, see the Figure~\ref{fig:events}. This computed value would
 be called a projection. It may be viewed as a function of a list of
 events which returns a projection of those events.
 
@@ -320,8 +320,7 @@ in a relational database, or create a search index for our data, etc.
 Since we store all events that happened in the system in our audit log,
 we can add a new projection at any time by simply processing all the
 historic events through a system that generates the new projection.
-Conceptual process flow of that processing is shown in Figure
-\ref{fig:projections}.
+Conceptual process flow of that processing is shown in Figure~\ref{fig:projections}.
 
 Another example of a real-world event-sourced model can be found in many
 relational database engines. An interesting aspect of these database
@@ -363,7 +362,7 @@ separate read model that will exist next to the original one. For
 instance, a search index of the application data, which is stored in a
 full-text-search server instead of a relational database, can be better
 in searching capabilities. The process of updating or rebuilding the the
-read models is shown in Figure \ref{fig:projections}.
+read models is shown in Figure~\ref{fig:projections}.
 
 
 \begin{figure}[h!]
@@ -526,7 +525,7 @@ CQRS takes this idea and applies it to the system level where it
 strictly separates the responsibility for handling a command input (to
 change the application state) from the responsibility of
 side-effect-free reading of application data \cite{journey}. You can see
-the conceptual view of the CQRS design in Figure \ref{fig:cqrs-concept}.
+the conceptual view of the CQRS design in Figure~\ref{fig:cqrs-concept}.
 
 
 \begin{figure}[h!]
@@ -614,7 +613,7 @@ used together and many CQRS practitioners use the terminology of DDD
 Because of that, let us succinctly describe some of the DDD concepts and
 terminology that are usually involved in the CQRS pattern in the
 following paragraphs. Relations of the terms in a complex system is
-shown in Figure \ref{fig:ddd}. You can find more information about DDD
+shown in Figure~\ref{fig:ddd}. You can find more information about DDD
 in \cite{ddd}.
 
 
@@ -788,7 +787,7 @@ period. So a process manager acts as a mediator between the aggregates
 conveying messages based on rules given by the process it manages.
 Usually, it holds some internal state by which it decides to send new
 events or commands to aggregates. An example of process flow of a saga
-is shown in Figure \ref{fig:saga}.
+is shown in Figure~\ref{fig:saga}.
 
 
 \begin{figure}[h!]
@@ -822,7 +821,7 @@ CQRS usually leads to such UI design for complex domains.
 
 Now that the concepts of CQRS were described, let's put the pieces
 together and see how they work by an example. The whole CQRS design is
-shown in Figure \ref{fig:cqrs-detail} in detail.
+shown in Figure~\ref{fig:cqrs-detail} in detail.
 
 Let's begin with a command which is sent from the user interface, e.g.
 ``\emph{add a product to user's cart}''. The command is received by the
@@ -874,8 +873,7 @@ persisted to storage. If the state of the aggregate is to change, it is
 loaded again, usually by a command handler, and an appropriate method is
 called that changes the internal state of the aggregate. After that, the
 aggregate is persisted again. Object-relational mapper (ORM) can be used
-to save the objects to desired storage. The process is shown in Figure
-\ref{fig:cqrs-no-es}.
+to save the objects to desired storage. The process is shown in Figure~\ref{fig:cqrs-no-es}.
 
 In the case of event sourcing, the process flow is a bit different. The
 events are used to recreate the state of aggregates instead of loading
@@ -895,7 +893,7 @@ gets to the desired state to possibly process a method triggered by a
 command. After the command was handled, we do not save the state of the
 aggregate, but instead, all the new events marking new state changes
 that were applied to that aggregate are persisted to the event store.
-The event-sourced model is shown in Figure \ref{fig:cqrs-es}.
+The event-sourced model is shown in Figure~\ref{fig:cqrs-es}.
 
 From the perspective of command handling you can see that event sourcing
 didn't bring any benefit; instead of mapping the whole object from ORM
@@ -1809,7 +1807,7 @@ layer saves the modifications again into the database.
 \end{center}
 \end{figure}
 
-In Figure \ref{fig:layers}, you can see a typical communication flow
+In Figure~\ref{fig:layers}, you can see a typical communication flow
 between the described layers. The flow starts by an HTTP request to the
 back-end server which is handled by the controller, then the operation
 is delegated to a service class, which starts a database transaction.
@@ -1825,7 +1823,7 @@ the client.
 For the purpose of the refactoring to CQRS and Event Sourcing, it is
 needed to describe the current domain model of the back-end application.
 Please note that the domain model here depicts the model in a
-traditional UML domain model diagram (shown in Figure \ref{fig:domain}).
+traditional UML domain model diagram (shown in Figure~\ref{fig:domain}).
 It is not meant to describe the domain model in terms of Domain-Driven
 Development.
 
@@ -2177,7 +2175,7 @@ front-end application. The same issue would be even more noticeable in
 the planned file sharing functionality.
 
 Thus, the two entities were rewritten to push the shared fields to an
-abstract class called \texttt{Node} as shown in Figure \ref{fig:node}.
+abstract class called \texttt{Node} as shown in Figure~\ref{fig:node}.
 This way a lot of redundancy was removed and the code became clearer. In
 the end, the redesign was beneficial for the refactoring to CQRS too.
 
@@ -2365,8 +2363,7 @@ implementation of \texttt{LabelService}.
 This entity and the behavior can be easily transformed to an aggregate.
 The way that aggregates are designed follows the traditional non-anemic
 OOP principles, i.e.~objects with both state and behavior. The
-\texttt{Label} aggregate would be modeled in UML like in Figure
-\ref{fig:label}. The fields that represented the original entity are
+\texttt{Label} aggregate would be modeled in UML like in Figure~\ref{fig:label}. The fields that represented the original entity are
 specified in the aggregate as well and the business logic moved from the
 service layer to the aggregate.
 
@@ -2584,7 +2581,7 @@ the read model.
 code}\label{overview-of-the-refactored-code}
 
 An overview of the package structure and dependencies regarding labels
-after refactoring is shown in Figure \ref{fig:package}.
+after refactoring is shown in Figure~\ref{fig:package}.
 
 
 \begin{figure}[h!]
@@ -3382,7 +3379,7 @@ business logic on the data or to present the data to a client. Many
 implementations of the pattern map the ORM entities to other objects ---
 domain entities, data transfer objects --- which are used in
 communication between two layers. This helps to define a strict
-interface between the layers. Figure \ref{fig:layered1} shows how the
+interface between the layers. Figure~\ref{fig:layered1} shows how the
 layers are stacked and how they communicate. The strict separation by
 interfaces makes the layers more decoupled and less prone to changes in
 other layers. Also, implementation of the components can be completely
