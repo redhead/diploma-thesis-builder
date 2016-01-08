@@ -1185,10 +1185,9 @@ of the command and the fields in the class instance carry the command
 data. For example, the \texttt{UpdateProductPriceCommand} class could
 have fields for the new price of the product and for the unique
 identification number (ID) of the product that the command targets. In
-Java, the code of that class could look like in listing \#X
-\textbf{listing needed}.
+Java, the code of that class could look like in Listing~\ref{lst:priceCommand}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={An example of a command class in Axon},label={lst:priceCommand},captionpos=b,float,floatplacement=H]
 class UpdateProductPriceCommand {
     
     private ProductId productId;
@@ -1203,7 +1202,7 @@ class UpdateProductPriceCommand {
     // ... getters and setters ...
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 The command name, represented by the class name, captures the intent of
 the command. It uses the imperative naming convention, in comparison to
@@ -1313,10 +1312,9 @@ events as immutable Java classes. The class names should capture the
 intent of an event, usually in the past tense by convention. It is
 highly encouraged to make the class serializable. A concrete event,
 represented by a class instance, contains the data describing the event.
-An example of an event class is presented in listing X\textbf{listing
-needed}.
+An example of an event class is presented in Listing~\ref{lst:updatedEvent}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={An example of an event class in Axon},label={lst:updatedEvent},captionpos=b,float,floatplacement=H]
 class ProductPriceUpdatedEvent {
     
     private final ProductId productId;
@@ -1334,7 +1332,7 @@ class ProductPriceUpdatedEvent {
     // ... getters ...
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 The event class in the example is very similar to a command class
 presented previously. Although not enforced, it is good practice to make
@@ -1379,10 +1377,9 @@ interface, which can be extended by the programmer to create the desired
 aggregate. One of the implementation classes is the
 \texttt{AbstractAnnotatedAggregateRoot} class which uses annotations to
 simplify the aggregate code and increase clarity. An example of an
-aggregate root that extends this abstract class is in listing \#x
-\textbf{listing needed}.
+aggregate root that extends this abstract class is in Listing~\ref{lst:aggregateRoot}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={An example of an annotated-based aggregate root class in Axon},label={lst:aggregateRoot},captionpos=b,float,floatplacement=H]
 class Product extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
@@ -1415,7 +1412,7 @@ class Product extends AbstractAnnotatedAggregateRoot {
     }
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 This simple example shows the \texttt{Product} entity class which serves
 as the aggregate root. The class defines a few fields that represent the
@@ -1540,10 +1537,9 @@ annotation based event listeners where multiple methods can handle
 different events based on the type of the event (effectively, based on
 the event class). The handler methods need to be annotated with the
 \texttt{@EventHandler} annotation. In that case, the listeners can be
-any objects not requiring to implement the interface. See listing X
-\textbf{listing needed} for an example.
+any objects not requiring to implement the interface. See Listing~\ref{lst:eventListener} for an example.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={An example of an annotation-based event listener in Axon},label={lst:eventListener},captionpos=b,float,floatplacement=H]
 class ProductEventListener {
 
     @EventHandler
@@ -1557,7 +1553,7 @@ class ProductEventListener {
     }
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 On top of that, the Axon's Spring support makes it easy to integrate the
 listeners with the Spring's IoC container. This support takes care of
@@ -2132,15 +2128,15 @@ interface to change a name of a folder resource:
 
 \noindent Before the redesign
 
-\begin{lstlisting}
-PUT /folder/abc123
+\begin{lstlisting}[caption={}]
+PUT /folder/123
 {"name": "New folder name"}
 \end{lstlisting}
 
 \noindent After the redesign
 
-\begin{lstlisting}
-POST /folder/abc123/nameChange
+\begin{lstlisting}[caption={}]
+POST /folder/123/nameChange
 {"name": "New folder name"}
 \end{lstlisting}
 
@@ -2330,15 +2326,15 @@ unaffected by the refactoring and is still used by controllers in the
 same way as in the original design. The implementation of the business
 logic methods, however, changed to delegation of the processing to the
 new domain model by dispatching commands. An example of such method is
-shown in Listing X\textbf{reference needed}.
+shown in Listing~\ref{lst:serviceMethod}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={An example of a business-logic service method after refactoring},label={lst:serviceMethod},captionpos=b,float,floatplacement=H]
 public void deleteLabel(String labelId) {
     commandGateway.sendAndWait(new DeleteLabelCommand(
             LabelId.of(labelId)
     ));
 }
-\end{verbatim}
+\end{lstlisting}
 
 
 \subsubsection{The domain model}\label{the-domain-model}
@@ -2396,11 +2392,11 @@ The implementation of the aggregate is influenced by the CQRS and ES
 principles, i.e.~an event is emitted for each state change. An event can
 be processed by one event handler in the aggregate, which actually
 changes the aggregate's state (updates the values of the aggregate's
-fields). See the implementation in PRILOHA X \textbf{reference needed}.
+fields). See the implementation in TODO PRILOHA X \textbf{reference needed}.
 The class for the event that gets emitted in the \texttt{update()}
-method is presented in LISTING X \textbf{reference needed}.
+method is presented in Listing~\ref{lst:labelUpdatedEvent}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={The \texttt{LabelUpdatedEvent} class},label={lst:labelUpdatedEvent},captionpos=b,float,floatplacement=H]
 @Value
 public class LabelUpdatedEvent {
 
@@ -2411,7 +2407,7 @@ public class LabelUpdatedEvent {
     private final String color;
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 Note that the class is actually not compilable by the standard Java
 compiler. There are some final fields but no constructor to initialize
@@ -2451,11 +2447,11 @@ some business logic that modified the entity, and finally save the
 result to the database. After refactoring, the business logic methods
 turned into factories of commands that are sent to the Axon's command
 gateway to be dispatched. Consider, for example, the
-\texttt{createLabel()} method presented in Listing X\textbf{reference
-needed}. After refactoring, it only delegates the execution of business
+\texttt{createLabel()} method presented in Listing~\ref{lst:createLabelMethod}.
+After refactoring, it only delegates the execution of business
 logic using a new command instance that is sent to the command gateway.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={The \texttt{createLabel()} service method after refactoring},label={lst:createLabelMethod},captionpos=b,float,floatplacement=H]
 public void createLabel(String name, String color) {
     String id = UUID.randomUUID().toString();
 
@@ -2463,7 +2459,7 @@ public void createLabel(String name, String color) {
             LabelId.of(id), name, color
     ));
 }
-\end{verbatim}
+\end{lstlisting}
 
 As you can see, apart from sending a command, it also creates an
 identifier for the new aggregate instance being created by the command.
@@ -2474,7 +2470,7 @@ This also makes scaling and asynchronous command processing easier,
 because the ID is known before any read model is updated, and it can be
 returned to the client immediately.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={The \texttt{CreateLabelCommand} class},label={lst:createLabelCommand},captionpos=b,float,floatplacement=H]
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class CreateLabelCommand extends UserAwareCommand {
@@ -2486,10 +2482,9 @@ public class CreateLabelCommand extends UserAwareCommand {
     private final String color;
 
 }
-\end{verbatim}
+\end{lstlisting}
 
-The dispatched command, defined by the class in Listing
-X\textbf{reference needed}, is forwarded to the command bus
+The dispatched command, defined by the class in Listing~\ref{lst:createLabelCommand}, is forwarded to the command bus
 (\texttt{SimpleCommandBus}) which executes the respective command
 handler. But just before that, it is intercepted by
 \texttt{AddUserCommandDispatchInterceptor}. As you can see, the command
@@ -2509,10 +2504,9 @@ mechanism depends on the repository type (e.g.~event sourcing
 repository). However, in case of the commands that create aggregate
 instances, the command handler must instantiate the aggregate and add it
 to the repository. The implementation of the command handler for
-\texttt{CreateLabelCommand} is presented in Listing X \textbf{reference
-needed}.
+\texttt{CreateLabelCommand} is presented in Listing~\ref{lst:createLabelCommandHandler}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={The command handler for \texttt{CreateLabelCommand}},label={lst:createLabelCommandHandler},captionpos=b,float,floatplacement=H]
 @CommandHandler
 public void createLabel(CreateLabelCommand command) {
     checkUnique(command.getName(), command.getColor(), command.getSentBy());
@@ -2526,7 +2520,7 @@ public void createLabel(CreateLabelCommand command) {
 
     repository.add(label);
 }
-\end{verbatim}
+\end{lstlisting}
 
 A command must be valid so it can be processed by a command handler. In
 this case, the command handler checks that a label with the given
@@ -2558,10 +2552,9 @@ handlers. As the business logic and invariant rules were already taken
 care of by the aggregates in the new domain model, the responsibility of
 event handlers is just to update the Hibernate entities to reflect the
 changes represented by the events. Let's finish the example of creating
-a label with the handler for \texttt{LabelCreatedEvent} shown in Listing
-X\textbf{reference needed}.
+a label with the handler for \texttt{LabelCreatedEvent} shown in Listing~\ref{lst:labelCreatedEvent}.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={The event handler (listener) for \texttt{LabelCreatedEvent}},label={lst:labelCreatedEvent},captionpos=b,float,floatplacement=H]
 @EventHandler
 public void createLabel(LabelCreatedEvent event) {
     UserDetails owner = userDao.getReference(event.getOwner().getId());
@@ -2574,7 +2567,7 @@ public void createLabel(LabelCreatedEvent event) {
 
     labelDao.save(label);
 }
-\end{verbatim}
+\end{lstlisting}
 
 The event handler uses the original Data Access Objects from the data
 access layer to communicate with the Hibernate ORM. To correctly set up
@@ -2838,12 +2831,14 @@ scenarios found in the integration tests for the original Integration
 Portal code. The tests followed the following scheme --- set up the
 initial state for the test, dispatch a command, whose processing was
 under test, and finally assert the correct state of the database (of the
-read model effectively). Listing X \textbf{reference needed} shows an
+read model effectively). Listing~\ref{lst:test} shows an
 example of one of the tests. The tests were written in the Groovy
 programming language \cite{groovy} by using Spock library \cite{spock},
 a testing and specification framework.
 
-\begin{verbatim}
+\begin{lstlisting}[caption={An example of a test specification using Spock.
+The first method tests successful creation of a new label.
+The second method tests that creating a duplicate label throws an exception.},label={lst:test},captionpos=b,float,floatplacement=H]
 public class CreateLabelIntegrationSpec 
         extends AbstractIntegrationSpecification {
 
@@ -2869,7 +2864,7 @@ public class CreateLabelIntegrationSpec
     }
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 As you can see, the tests are easy to navigate by leveraging Groovy's
 named blocks that refer to the BDD-style (Behavior Driver Development)
@@ -2911,8 +2906,8 @@ If new events are published by handling the commands, they are processed
 by event listeners and the read model is built accordingly. Finally, the
 tests assert the state of the database by querying the Hibernate entity
 manager and checking the attribute values in the entities. In some
-cases, like in the listing X\textbf{reference needed} above, throwing of
-an expected exception is needed to assert.
+cases, like in the Listing~\ref{lst:test}, it is needed to assert that an
+expected exception was thrown.
 
 The code under test uses Hibernate to access the database in a uniform
 way, regardless of the database type. For the test environment, an
