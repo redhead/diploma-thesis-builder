@@ -329,24 +329,53 @@ public class Label extends
 
 %\newpage
 
-%\begin{lstlisting}[caption={Ukázka integračních testů},label={lst:integrationtest},
-%language=java,
-%numbers=left,
-%breaklines=true]
-%xxx
-%\end{lstlisting}
+\begin{lstlisting}[caption={An example of a test specification using Spock.
+The first method tests successful creation of a new label.
+The second method tests that creating a duplicate label throws an exception.},label={lst:test},
+language=java,
+numbers=left,
+breaklines=true]
+public class CreateLabelIntegrationSpec
+        extends AbstractIntegrationSpecification {
+
+    def "should create a label"() {
+        when:
+            dispatch new CreateLabelCommand(LabelId.of("1"),
+                "work", "red")
+
+        then:
+            def label = get(Label, "1")
+            label.id == "1"
+            label.name == "work"
+            label.color == "red"
+            label.owner.id == "1"
+    }
+
+    def "creating duplicate label results in error"() {
+        given:
+            dispatch new CreateLabelCommand(LabelId.of("1"),
+                "work", "red")
+
+        when:
+            dispatch new CreateLabelCommand(LabelId.of("2"),
+                "work", "red")
+
+        then:
+            thrown(AlreadyExistsException)
+    }
+
+}
+\end{lstlisting}
 
 
-%\chapter{XXX}\label{chap:loadtest}
 
-
-\chapter{Contents of CD attachment}
+\chapter{Contents of attached CD}
 
 \dirtree{%
-.1 src/\DTcomment{zdrojové soubory aplikace}.
+.1 src/\DTcomment{project source code}.
 .1 text/.
-.2 src/\DTcomment{zdrojové soubory dokumentu}.
-.2 jezdirad-thesis-2013.pdf\DTcomment{elektronická verze dokumentu ve formátu PDF}.
+.2 src/\DTcomment{thesis source code}.
+.2 jezdirad-thesis-2015.pdf\DTcomment{thesis in PDF format}.
 .1 instalacni\textunderscore{}manual.pdf\DTcomment{návod na instalaci aplikace}.
 .1 readme.txt\DTcomment{obsah CD a důležité informace}.
 }
