@@ -92,7 +92,7 @@ Segregation (CQRS) are two examples which have been highly discussed in
 articles and conferences in the last years. Their core ideas and
 benefits are interesting enough to aim the attention at their details
 and implementation. And since Java is one of the most used programming
-languages in the enterprise software development \cite{java}, it is
+languages in the enterprise software development~\cite{java}, it is
 appropriate to study and apply the patterns using this language.
 
 \subsection{Goals}\label{goals}
@@ -154,7 +154,7 @@ other; they can work independently. However, they nicely complement each
 other to form a very effective and powerful design for a system.
 
 Both design patterns were popularized by the practitioners of the
-Domain-Driven Design (DDD) \cite{ddd} methodology for software
+Domain-Driven Design (DDD)~\cite{ddd} methodology for software
 development. And so, the DDD concepts and ideas influenced the
 implementation details of the two patterns. DDD is a very comprehensive
 subject on its own and as such will not be discussed in this thesis
@@ -174,8 +174,7 @@ Event Sourcing is a way of persisting the state of an application by
 storing the history that shaped the application's current state. Instead
 of storing only the current state in some fixed structural model,
 e.g.~in a relational database, event-sourced model stores a list of
-events that happened in the system in its entire lifetime.
-\cite{journey} \cite{greg-youtube}
+events that happened in the system in its entire lifetime.~\cite{journey}~\cite{greg-youtube}
 
 \subsubsection{Domain event}\label{domain-event}
 
@@ -326,13 +325,13 @@ Another example of a real-world event-sourced model can be found in many
 relational database engines. An interesting aspect of these database
 systems is that, internally, they usually keep some kind of a
 transaction log where they store all the changes that were applied to
-the database \cite{cqrsnu-eventsourcing}. This log is then used, for
+the database~\cite{cqrsnu-eventsourcing}. This log is then used, for
 example, to handle database transactions, crash recovery, and
 replication. It is very easy to replicate data if they are represented
 as immutable events in an append-only, sequential log. To replicate, a
 node just needs to send the events that are new since the last
 replication and the receiving node applies these changes to itself,
-making both nodes synchronized \cite{replica}.
+making both nodes synchronized~\cite{replica}.
 
 In summary, instead of storing the current state of the application,
 Event Sourcing primarily stores facts about changes (events) that
@@ -518,13 +517,12 @@ CQS (Command Query Separation) principle for designing interfaces of
 objects. CQS says that the object's methods should be either commands or
 queries. The responsibility of a query is solely to return data and not
 to alter the state of the object. On the other hand, a command should
-only change the state of the object but never return any data
-\cite{journey}.
+only change the state of the object but never return any data~\cite{journey}.
 
 CQRS takes this idea and applies it to the system level where it
 strictly separates the responsibility for handling a command input (to
 change the application state) from the responsibility of
-side-effect-free reading of application data \cite{journey}. You can see
+side-effect-free reading of application data~\cite{journey}. You can see
 the conceptual view of the CQRS design in Figure~\ref{fig:cqrs-concept}.
 
 
@@ -556,7 +554,7 @@ and/or multi-user collaboration.
 The second, more important thing is that usually it is the read side of
 your application that needs to be scaled to ensure the quality of your
 system for a bigger audience. In many systems, a ratio of reads to
-writes can be several orders of magnitude \cite{cap}. Instead of scaling
+writes can be several orders of magnitude~\cite{cap}. Instead of scaling
 everything in the system it is better to focus on the part of the
 application that is most heavily used, i.e.~the read side.
 
@@ -595,8 +593,7 @@ of different types very easily.
 \subsubsection{Terminology}\label{terminology}
 
 Before we get into implementing CQRS and Event Sourcing in Java it is
-necessary to explain some of the terminology used in the process. In
-\cite{journey}, the CQRS pattern was presented as hugely influenced by
+necessary to explain some of the terminology used in the process. In~\cite{journey}, the CQRS pattern was presented as hugely influenced by
 the approach to developing software systems known as the Domain-Driven
 Design methodology (DDD). The DDD approach describes a set of techniques
 to analyze the domain of the system and to construct a conceptual model
@@ -607,21 +604,19 @@ domains.
 However, it is essential to say that DDD does not dictate the usage of
 CQRS, nor CQRS needs DDD for it to be implemented in the system.
 However, in much of the existing literature these two principles are
-used together and many CQRS practitioners use the terminology of DDD
-\cite{journey}.
+used together and many CQRS practitioners use the terminology of DDD~\cite{journey}.
 
 Because of that, let us succinctly describe some of the DDD concepts and
 terminology that are usually involved in the CQRS pattern in the
 following paragraphs. Relations of the terms in a complex system is
 shown in Figure~\ref{fig:ddd}. You can find more information about DDD
-in \cite{ddd}.
+in~\cite{ddd}.
 
 
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[width=1\columnwidth]{figures/ddd/ddd}
-\caption[Relations between DDD concepts]{An example of relations between DDD concepts in a complex system. Source
-\cite{journey}.%
+\caption[Relations between DDD concepts]{An example of relations between DDD concepts in a complex system. Source~\cite{journey}.%
 }
 \end{center}
 \end{figure}
@@ -713,7 +708,7 @@ uncertainly. Moreover, CQRS is to a greater degree a principle rather
 than a design pattern with its own terminology. However, the CQRS
 implementation established by using the domain-driven design comes with
 a new vocabulary. Some of the terms described below can be used to talk
-about DDD too and vice versa \cite{ddd-terms}.
+about DDD too and vice versa~\cite{ddd-terms}.
 
 \paragraph{Commands}\label{commands}
 
@@ -794,7 +789,7 @@ is shown in Figure~\ref{fig:saga}.
 \begin{center}
 \includegraphics[width=1\columnwidth]{figures/saga/saga}
 \caption[A simple process manager]{A simple process manager that tracks the state of an order of seats at a
-conference. Source \cite{journey}.%
+conference. Source~\cite{journey}.%
 }
 \end{center}
 \end{figure}
@@ -1048,7 +1043,7 @@ other users.
 
 \subsubsection{Axon Framework}\label{axon-framework}
 
-Axon Framework \cite{axon} proclaims itself as a Java Framework for
+Axon Framework~\cite{axon} proclaims itself as a Java Framework for
 scalable and high-performance applications and being focused on making
 life easier for developers that want to create applications based on the
 CQRS principles and concepts, i.e.~commands, events, aggregates,
@@ -1069,15 +1064,14 @@ being tied to the Axon's specific logic. However, it does not try to
 hide CQRS architecture details or its components, so it is better to
 have the knowledge of CQRS.
 
-The code repository on GitHub has more than 300 stars and 100 forks
-\cite{axon-repo}. The user community is active on the mailing lists and
+The code repository on GitHub has more than 300 stars and 100 forks~\cite{axon-repo}. The user community is active on the mailing lists and
 on the issue tracker. The code is open source under the Apache 2
 license. The authors also provide commercial services such as support
 contracts, training, and consultancy.
 
 \subsubsection{EventStore2}\label{eventstore2}
 
-EventStore2 \cite{eventstore2} is a framework for creating event sourced
+EventStore2~\cite{eventstore2} is a framework for creating event sourced
 applications in Java. Much like Axon Framework it uses CQRS concepts and
 terms for the implementation, and it utilizes the Java annotations to
 configure command handlers, sagas and event handlers (called Projections
@@ -1100,7 +1094,7 @@ many users. It is open source under the MIT license.
 
 \subsubsection{Jdon Framework}\label{jdon-framework}
 
-The Jdon Framework \cite{jdon} website describes the framework as a Java
+The Jdon Framework~\cite{jdon} website describes the framework as a Java
 reactive framework that can be used to build Domain Driven Design
 applications using CQRS and Event Sourcing with asynchronous concurrency
 and higher throughput. It uses reactive approach and actor based model,
@@ -1130,8 +1124,7 @@ many users (not sample or ``playground'' projects of one author) with
 good documentation and active development. The three frameworks I found
 that were worth to study are described above.
 
-EventStore2 and Jdon both use actor model and reactive approach
-\cite{actor} for concurrent execution, where Akka seems to dominate the
+EventStore2 and Jdon both use actor model and reactive approach~\cite{actor} for concurrent execution, where Akka seems to dominate the
 Java (and Scala) world in that matter nowadays. Even though I would very
 much like to get into reactive programming in Akka, the two frameworks
 were found unconvincing to be chosen for the refactoring.
@@ -1153,7 +1146,7 @@ the refactoring of Integration Portal to CQRS and Event Sourcing.
 
 In this section, let's introduce the reader to Axon Framework's
 specifics that relate to the refactoring to CQRS and ES further in the
-text. For more details, see the framework's documentation \cite{axon}.
+text. For more details, see the framework's documentation~\cite{axon}.
 
 As mentioned previously, Axon Framework very well supports Spring
 Framework, which is also used in Integration Portal. It is not required
@@ -1241,7 +1234,7 @@ will be described further, is maintained for each sent command by the
 bus.
 
 There are other implementations of the \texttt{CommandBus} interface
-provided by Axon. One of them uses Disruptor \cite{disruptor} which
+provided by Axon. One of them uses Disruptor~\cite{disruptor} which
 takes a different approach to multithreaded processing to increase
 performance. Another implementation provides distribution of command
 buses and command handlers across different JVMs.
@@ -1673,8 +1666,8 @@ communication interface for the frontend.
 \subsubsection{Frontend}\label{frontend}
 
 The front-end presentation layer of the project is a client-side
-HTML5/JavaScript application \cite{frontend} written using AngularJS
-framework \cite{angular}. It is a so-called single-page application,
+HTML5/JavaScript application~\cite{frontend} written using AngularJS
+framework~\cite{angular}. It is a so-called single-page application,
 that means the browser loads the web page only once and all the other
 communication is done using asynchronous calls to the server in the
 background. The page refreshes the content for the user by dynamic
@@ -1694,11 +1687,11 @@ done using a REST API (Application Programming Interface).
 
 Because the frontend is not really a subject of refactoring to CQRS and
 Event Sourcing, it won't be discussed in any more detail. For more
-information, see \cite{ddd}.
+information, see~\cite{ddd}.
 
 \subsubsection{Backend}\label{backend}
 
-The back-end server application \cite{backend} uses a traditional
+The back-end server application~\cite{backend} uses a traditional
 three-layer architecture in Java Enterprise Edition implemented using
 Spring Framework and its supporting libraries for web development,
 security, database access, and REST services. A PostreSQL database is
@@ -1740,7 +1733,7 @@ needed again, it can be moved on-line seamlessly.
 \subsubsection{Architecture}\label{architecture}
 
 The architecture follows a typical setup for Java Enterprise Edition
-applications called a three-tier architecture \cite{p-eap}, where the
+applications called a three-tier architecture~\cite{p-eap}, where the
 client-side application written in AngularJS is the presentation tier,
 the back-end server is the application tier and the PostreSQL database
 server is the data tier. On top of that, Integration Portal communicates
@@ -2077,7 +2070,7 @@ changes before the refactoring.
 \subsubsection{Revising the REST
 interface}\label{revising-the-rest-interface}
 
-After reading \cite{journey}, the idea of a task-based user interface,
+After reading~\cite{journey}, the idea of a task-based user interface,
 described in \ref{task-based-user-interface}~\nameref{task-based-user-interface}, was taken into consideration in
 regards to the Integration Portal UI. A RESTful application programming
 interface mediates the communication between the front-end user
@@ -2227,7 +2220,7 @@ CQRS read model only. For simplicity, the schema of the database was
 altered for the database to act as an event store too.
 
 Another important decision, in the strategy of refactoring to CQRS and
-ES, was incorporating Test-Driven Development (TDD) \cite{tdd} into the
+ES, was incorporating Test-Driven Development (TDD)~\cite{tdd} into the
 process. Tests were often written first to reason about the changes, and
 then continually run in the process of refactoring to ensure the
 implementation of some feature was correct. These tests were integration
@@ -2359,7 +2352,7 @@ This entity and the behavior can be easily transformed to an aggregate.
 The way that aggregates are designed follows the traditional non-anemic
 OOP principles, i.e.~objects with both state and behavior. The
 \texttt{Label} aggregate would be modeled in UML like in Figure~\ref{fig:label}. The fields that represented the original entity are
-specified in the aggregate as well and the business logic moved from the
+specified in the aggregate as well and the business logic was moved from the
 service layer to the aggregate.
 
 
@@ -2381,12 +2374,13 @@ less copy the intents of respective commands, which will be described
 further in the text.
 
 The implementation of the aggregate is influenced by the CQRS and ES
-principles, i.e.~an event is emitted for each state change. An event can
-be processed by one event handler in the aggregate, which actually
+principles, i.e.~for each state change, an event is emitted that is
+processed by one event handler in the aggregate, which actually
 changes the aggregate's state (updates the values of the aggregate's
-fields). See the implementation in TODO PRILOHA X \textbf{reference needed}.
-The class for the event that gets emitted in the \texttt{update()}
-method is presented in Listing~\ref{lst:labelUpdatedEvent}.
+fields). See the implementation of the aggregate class in Appendix \ref{lst:labelAggregate}.
+For example, the \texttt{edit()} method (line 22) checks whether any change is actually needed and if so, it publishes
+the \texttt{LabelUpdatedEvent}, which is shown in Listing~\ref{lst:labelUpdatedEvent}, using the \texttt{apply()} method.
+This event is immediately processed by the event handler on line 56, which updates the fields accordingly.
 
 \begin{lstlisting}[caption={The \texttt{LabelUpdatedEvent} class},label={lst:labelUpdatedEvent},captionpos=b,float,floatplacement=H]
 @Value
@@ -2401,10 +2395,12 @@ public class LabelUpdatedEvent {
 }
 \end{lstlisting}
 
-Note that the class is actually not compilable by the standard Java
+\paragraph{Lombok annotations}
+
+Note that the event class is not actually compilable by the standard Java
 compiler. There are some final fields but no constructor to initialize
-them. But notice the \texttt{@Value} annotation. This annotation is part
-of Lombok library \cite{lombok} that aims to reduce the number of
+them. However, notice the \texttt{@Value} annotation. This annotation is part
+of Lombok library~\cite{lombok} that aims to reduce the number of
 repeated tasks and constructs needed by a developer to write a proper
 Java class. At compile time, the annotation defines which missing
 language constructs need to be added so the class compiles.
@@ -2633,7 +2629,7 @@ saga is defined by the following steps:
   Using an event scheduler, an event is scheduled which expires the
   token in one hour.
 \item
-  Following that:
+  After that:
 
   \begin{enumerate}
   \def\labelenumii{\alph{enumii})}
@@ -2666,7 +2662,7 @@ the steps below, is created:
   Using an event scheduler, an event is scheduled which expires the
   token in one hour.
 \item
-  Following that:
+  After that:
 
   \begin{enumerate}
   \def\labelenumii{\alph{enumii})}
@@ -2720,8 +2716,7 @@ be upheld by modeling the file system as one big aggregate, containing
 folders and files in a tree hierarchy. However, the folders can be
 nested, and so the aggregate could grow very large. Loading such an
 aggregate with possibly thousands of objects would be incredibly
-resource-intensive and impossible to scale. In
-\cite{aggregate1}\cite{aggregate2}\cite{aggregate3} it is advised to
+resource-intensive and impossible to scale. In~\cite{aggregate1}\cite{aggregate2}\cite{aggregate3} it is advised to
 make aggregates small. Also, it provides some solutions to consistency
 issues. So the folders and files were designed as self-contained
 aggregates. Similarly to the original entities, the two new aggregates,
@@ -2752,8 +2747,7 @@ doesn't hold references to other child folders or files, it wasn't so
 straightforward to recursively delete child nodes. This issue was not
 easy to solve without a lot of experience with CQRS design. However, it
 then occurred that a saga (or in this case, a process manager) could be
-of use. This idea was validated by CQRS practitioners in
-\cite{deleting}.
+of use. This idea was validated by CQRS practitioners in~\cite{deleting}.
 
 The basic principle is that the process manager (called
 \texttt{FolderDeletionSaga} in the code) coordinates the deletion of
@@ -2825,7 +2819,7 @@ initial state for the test, dispatch a command, whose processing was
 under test, and finally assert the correct state of the database (of the
 read model effectively). Listing~\ref{lst:test} shows an
 example of one of the tests. The tests were written in the Groovy
-programming language \cite{groovy} by using Spock library \cite{spock},
+programming language~\cite{groovy} by using Spock library~\cite{spock},
 a testing and specification framework.
 
 \begin{lstlisting}[caption={An example of a test specification using Spock.
@@ -2962,8 +2956,8 @@ responsibilities and the dependencies are now visible and clear.
 Additionally, by implementing the CQRS in Axon Framework, the write
 model, and the business logic is now more transparent and focused in one
 place --- the aggregates, whose changes are triggered by command
-handlers. On the other side, updates to the entities of the read model
-are put in separate classes, whose methods are triggered by event
+handlers. On the other hand, updating the entities of the read model
+is put into separate classes, and their methods are triggered by event
 handlers when the state changes.
 
 The responsibilities are now clearly divided into separate submodules.
@@ -3107,7 +3101,7 @@ an argument of the same type as the command or event. This way is not
 very convenient, nor fast for the developers.
 
 The authors of Axon Framework knew about this annoyance, so they've
-created a plugin \cite{idea-plugin} for IntelliJ IDEA, a Java IDE. The
+created a plugin~\cite{idea-plugin} for IntelliJ IDEA, a Java IDE. The
 plugin makes navigation to and from handler methods easier. Sometimes,
 however, it is not fully reliable and stops working, from my experience.
 
@@ -3128,7 +3122,7 @@ separating unrelated responsibilities in the domain was underestimated.
 In the end, it turned out that the system is actually made of smaller
 domain models that could be separated. This also includes the aggregates
 which can be broken into smaller consistency boundaries that relate to
-different contexts. As Domain-Driven Design \cite{ddd} teaches us, the
+different contexts. As Domain-Driven Design~\cite{ddd} teaches us, the
 domain model should be incrementally improved as our knowledge about the
 domain increases.
 
@@ -3204,7 +3198,7 @@ the user password would not.
 
 In some bounded contexts, where a domain model is trivial, a simple CRUD
 system could be used instead of forcing CQRS, e.g.~in the administration
-bounded context. This technique was used in \cite{journey}. Note that
+bounded context. This technique was used in~\cite{journey}. Note that
 all the changes still need to be validated against the domain knowledge,
 if it is truly inappropriate to use CQRS or ES. Investigate all the
 benefits and disadvantages that arise from not using the patterns before
@@ -3227,11 +3221,10 @@ If system writes (i.e.~command processing) become slow, it may be caused
 by too many events being queried and handled to get the aggregate
 instance to the desired state before handling the state change.
 According to Greg Young, the author of Event Sourcing, aggregates do not
-need snapshotting if the number of events of an instance is in hundreds
-\cite{greg-youtube}. If the number of events increases to thousands,
+need snapshotting if the number of events of an instance is in hundreds~\cite{greg-youtube}. If the number of events increases to thousands,
 snapshotting is a good way to optimize the write model. For more
 information about snapshotting in Axon Framework, see the Axon
-documentation \cite{axon-docs}.
+documentation~\cite{axon-docs}.
 
 \paragraph{Specialized event store}\label{specialized-event-store}
 
@@ -3240,8 +3233,7 @@ PostreSQL database. This may not be a great choice for an event store
 because it is not optimized to do this task, and what's more, it is
 harder to implement publish-subscribe event processing on top of it. My
 recommendation is to search for a different database engine to store the
-events to. Particularly, EventStore \cite{eventstore} and Apache Kafka
-\cite{kafka} seem to be great candidates as they refer to Event Sourcing
+events to. Particularly, EventStore~\cite{eventstore} and Apache Kafka~\cite{kafka} seem to be great candidates as they refer to Event Sourcing
 and processing in their overview and documentation.
 
 
@@ -3253,7 +3245,7 @@ few ideas for the future developers are presented below to explore.
 \paragraph{Axon 3}\label{axon-3}
 
 Version 3 of Axon Framework is under development targeting a release
-date in the first quarter of 2016 \cite{axon}. It brings a refined way
+date in the first quarter of 2016~\cite{axon}. It brings a refined way
 of writing classes of aggregates and sagas, so they do not extend any
 Axon's classes making the domain model clean of implementation details.
 It also brings other interesting features such as scheduled commands and
@@ -3306,8 +3298,7 @@ This last chapter before concluding the diploma thesis compares the
 presented design patterns to the traditional layered architecture. The
 reason why this architecture figures in the comparison is not
 accidental. Not only is it used in Integration Portal, but also it's the
-most used architectural pattern in Java enterprise applications
-\cite{oreilly}. I've used this architecture myself for years in the
+most used architectural pattern in Java enterprise applications~\cite{oreilly}. I've used this architecture myself for years in the
 university and at work.
 
 CQRS takes the main role in the comparison since it represents the most
@@ -3324,7 +3315,7 @@ Event Sourcing.
 
 Layered, or more commonly N-layer or layers, architecture is a pattern
 that helps to structure applications to logical layers, each one being
-at a particular level of an abstraction \cite{pattern-oriented}. The
+at a particular level of an abstraction~\cite{pattern-oriented}. The
 benefit of this pattern is that the low- and high-level issues are
 decoupled from each other, usually by some clean interface. The
 communication is then achieved from high-level layers to the low-level
@@ -3333,7 +3324,7 @@ not be mixed together, and changes in one layer should not affect other
 layers.
 
 It is the most common architecture pattern and the de facto standard for
-most Java enterprise applications \cite{oreilly}. As such, the pattern
+most Java enterprise applications~\cite{oreilly}. As such, the pattern
 is carried out in one specific way in most JEE applications, although,
 it is still valid by the general definition above. Conceptually, there
 is nothing wrong with the general pattern, and it is still a good
@@ -3344,7 +3335,7 @@ describe the specific implementation in that environment.
 Applications are usually composed of some components. The aim of the
 layered architecture is to organize these components in horizontal
 layers, each layer having a specific role and responsibility. In a
-typical JEE application, according to \cite{javadocs}, there are three
+typical JEE application, according to~\cite{javadocs}, there are three
 layers:
 
 \begin{itemize}
@@ -3401,7 +3392,7 @@ principle}\label{violation-of-single-responsibility-principle}
 
 Strict communication between stacked layers results in a situation where
 the business layer has to be accessed to only query data. This violates
-the single responsibility principle \cite{srp-violation}, that
+the single responsibility principle~\cite{srp-violation}, that
 encourages classes to have only one responsibility, one reason to
 change. Responsibilities for validation and execution of user actions,
 as well as queries, permeate into both data access and business logic
@@ -3413,7 +3404,7 @@ We can look at layers as abstractions of implementation details. For
 example, presentation layer does not need to know how business logic is
 handled or where and how the data is stored. However, \emph{all
 non-trivial abstractions, to some degree, are leaky}, as the law of
-leaky abstractions says \cite{leaky}. This leakage also affects the
+leaky abstractions says~\cite{leaky}. This leakage also affects the
 layered architecture. Often, there are many abstractions in sequence
 below presentation layer, e.g.~business layer, data access layer, remote
 call, ORM, SQL. All these abstractions tend to leak in some way which
@@ -3423,9 +3414,9 @@ such as performance and scalability.
 \paragraph{Anemic model}\label{anemic-model}
 
 The way how the layers are constructed encourages developers to create
-anemic domain model \cite{layered-anemic}. That is a model where domain
+anemic domain model~\cite{layered-anemic}. That is a model where domain
 entities contain little or no business logic and usually, just expose
-getters and setters of their fields \cite{anemic}. Although anemic
+getters and setters of their fields~\cite{anemic}. Although anemic
 entities follow single responsibility principle, as the only reason to
 change them is when data structure changes, the business logic is
 disconnected from the data. This goes against the basic principles of
@@ -3444,7 +3435,7 @@ and invariants for themselves.
 
 In very simple, mostly CRUD-based, applications, code written in
 strictly layered design makes the components very thin with no added
-value \cite{oreilly}. Implementations usually just delegate calls from
+value~\cite{oreilly}. Implementations usually just delegate calls from
 one layer to the other just to conform to the strict top-down way of
 processing a request. When implementing a new feature, it usually means
 to add unnecessary code to the project just for the sake of having
@@ -3459,11 +3450,11 @@ source.
 
 Even though, the layers (and their responsibilities) are decoupled from
 each other, they usually, based on the underlying implementation, are
-not loosely coupled \cite{oreilly}. Specifically, both presentation
+not loosely coupled~\cite{oreilly}. Specifically, both presentation
 layer and business layer depend on the data access layer. Thus, data
 access logic is omnipresent in the code. This tends to make the system
 monolithic, which in turn can pose some potential issues with
-deployment, robustness, reliability, and scalability \cite{oreilly}.
+deployment, robustness, reliability, and scalability~\cite{oreilly}.
 
 
 \subsection{Effects of CQRS and ES on
@@ -3491,8 +3482,7 @@ This has a number of benefits, e.g.~it makes it a lot easier to test the
 business logic, and also it is not affected by leaky abstraction of the
 data access layer.
 
-This pushes the design more to the hexagonal \cite{hex} or clean
-\cite{clean} architecture, which puts the domain and business logic into
+This pushes the design more to the hexagonal~\cite{hex} or clean~\cite{clean} architecture, which puts the domain and business logic into
 the center. This also turns the domain away from the anemic model that
 was often found in the traditional design.
 
@@ -3601,7 +3591,7 @@ In Java, the use of Axon Framework to implement the patterns was a good
 decision, although there are some issues regarding implementation
 details that the framework enforces to the code being developed. Some of
 the downsides should be resolved in the next major version, which should
-be released soon \cite{axon}. Even though the framework does not use the
+be released soon~\cite{axon}. Even though the framework does not use the
 now popular actor model and reactive programming that fit with the
 paradigms, it is a solid, well-tested, integrable piece of a library
 with many great features that makes the implementation of CQRS and ES

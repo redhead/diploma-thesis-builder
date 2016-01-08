@@ -246,24 +246,98 @@ unicode=true,
 \chapter{Code listings}\label{chap:ukazkykodu}
 
 
-\begin{lstlisting}[caption={Ukázka integračních testů},label={lst:integrationtest},
+\begin{lstlisting}[caption={The \texttt{Label} aggregate source code},label={lst:labelAggregate},
 language=java,
 numbers=left,
 breaklines=true]
-xxx
+@NoArgsConstructor
+@Getter
+public class Label extends
+        AbstractAnnotatedAggregateRoot<LabelId> {
+
+    @AggregateIdentifier
+    private LabelId id;
+
+    private UserId owner;
+
+    private String name;
+
+    private String color;
+
+    private Set<NodeId> labeledNodes = new HashSet<NodeId>();
+
+    public Label(LabelId id, String name, String color,
+            UserId owner) {
+        apply(new LabelCreatedEvent(id, name, color, owner));
+    }
+
+    public void edit(String name, String color) {
+        if (this.name.equals(name) && this.color.equals(color)){
+            return; // no change
+        }
+        apply(new LabelUpdatedEvent(id, name, color));
+    }
+
+    public void delete() {
+        apply(new LabelDeletedEvent(id));
+    }
+
+    public void addToNode(NodeId nodeId) {
+        if (labeledNodes.contains(nodeId)) {
+            return; // no change
+        }
+        apply(new LabelAddedToNodeEvent(id, nodeId));
+    }
+
+    public void removeFromNode(NodeId nodeId) {
+        if (!labeledNodes.contains(nodeId)) {
+            return; // no change
+        }
+        apply(new LabelRemovedFromNodeEvent(id, nodeId));
+    }
+
+    @EventSourcingHandler
+    public void handle(LabelCreatedEvent event) {
+        id = event.getId();
+        name = event.getName();
+        color = event.getColor();
+        owner = event.getOwner();
+    }
+
+    @EventSourcingHandler
+    public void handle(LabelUpdatedEvent event) {
+        name = event.getName();
+        color = event.getColor();
+    }
+
+    @EventSourcingHandler
+    public void handle(LabelDeletedEvent event) {
+        markDeleted();
+    }
+
+    @EventSourcingHandler
+    public void handle(LabelAddedToNodeEvent event) {
+        labeledNodes.add(event.getNodeId());
+    }
+
+    @EventSourcingHandler
+    public void handle(LabelRemovedFromNodeEvent event) {
+        labeledNodes.remove(event.getNodeId());
+    }
+}
 \end{lstlisting}
 
-\newpage
+%\newpage
 
-\begin{lstlisting}[caption={Ukázka integračních testů},label={lst:integrationtest},
-language=java,
-numbers=left,
-breaklines=true]
-xxx
-\end{lstlisting}
+%\begin{lstlisting}[caption={Ukázka integračních testů},label={lst:integrationtest},
+%language=java,
+%numbers=left,
+%breaklines=true]
+%xxx
+%\end{lstlisting}
 
 
-\chapter{XXX}\label{chap:loadtest}
+%\chapter{XXX}\label{chap:loadtest}
 
 
 \chapter{Contents of CD attachment}

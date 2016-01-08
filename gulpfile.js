@@ -118,8 +118,8 @@ createTasks('_pdf', build, {links: true, zadani: true});
 createTasks('_print', print, {links: false, zadani: false});
 
 gulp.task('default', gulp.parallel(
-		gulp.series('build_pdf', 'show_pdf'),
-		gulp.series('build_print')
+		gulp.series('build_pdf', 'show_pdf')
+		//,gulp.series('build_print')
 	)
 );
 
