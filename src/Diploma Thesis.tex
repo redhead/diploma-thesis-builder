@@ -1164,8 +1164,7 @@ Axon's building blocks.
 
 Axon Framework doesn't hide the CQRS details from its users and so it
 shares the CQRS terminology. The building blocks described in
-\ref{command-query-responsibility-segregation}
-\nameref{command-query-responsibility-segregation} are used to build the
+\ref{command-query-responsibility-segregation}~\nameref{command-query-responsibility-segregation} are used to build the
 domain model with Axon Framework. On top of these building blocks, some
 infrastructure and configuration is needed to set up Axon. The following
 paragraphs describe the concepts that are specific to Axon Framework
@@ -1473,8 +1472,7 @@ previously saved instance. The \texttt{load()} methods use an aggregate
 identifier to load the desired aggregate instance. One of the methods,
 however, has an extra \texttt{version} parameter, that can be used to
 load an aggregate instance of a specific version. For more information
-about the aggregate versioning, see \ref{conflicting-changes}
-\nameref{conflicting-changes}.
+about the aggregate versioning, see \ref{conflicting-changes}~\nameref{conflicting-changes}.
 
 For the purpose of event sourcing, Axon provides the
 \texttt{EventSourcingRepository} which loads an aggregate instance by
@@ -2080,8 +2078,7 @@ changes before the refactoring.
 interface}\label{revising-the-rest-interface}
 
 After reading \cite{journey}, the idea of a task-based user interface,
-described in \ref{task-based-user-interface}
-\nameref{task-based-user-interface}, was taken into consideration in
+described in \ref{task-based-user-interface}~\nameref{task-based-user-interface}, was taken into consideration in
 regards to the Integration Portal UI. A RESTful application programming
 interface mediates the communication between the front-end user
 interface and the back-end logic.
@@ -2108,8 +2105,7 @@ same time. Even the UI never sends one PUT request to alter multiple
 unrelated features of one resource. So a general-purpose update request
 on a resource is an exaggerated abstraction that hides the intent of the
 change. The importance of capturing intents in commands and events is
-explained in \ref{command-query-responsibility-segregation}
-\nameref{command-query-responsibility-segregation}.
+explained in \ref{command-query-responsibility-segregation}~\nameref{command-query-responsibility-segregation}.
 
 To solve this problem, it was decided to redesign the back-end REST API
 so the update request carries the intent clearly with one component to
@@ -2258,8 +2254,7 @@ and deployment, but the code can remain almost the same.
 \subsection{Refactoring the domain
 model}\label{refactoring-the-domain-model}
 
-As described in \ref{introduction-to-integration-portal}
-\nameref{introduction-to-integration-portal}, the original domain model
+As described in \ref{introduction-to-integration-portal}~\nameref{introduction-to-integration-portal}, the original domain model
 consisted of Hibernate entities that were modified by the business logic
 in the service layer and persisted by the data access layer. The
 refactoring of functionality for each entity is described in the
@@ -2937,9 +2932,7 @@ Portal.
 
 \subsubsection{Benefits}\label{benefits}
 
-Most of the benefits of the CQRS and ES designs that were described in
-\ref{event-sourcing-and-cqrs-design-patterns}
-\nameref{event-sourcing-and-cqrs-design-patterns} were not fully
+Most of the benefits of the CQRS and ES designs that were described in Chapter~\ref{event-sourcing-and-cqrs-design-patterns}~\nameref{event-sourcing-and-cqrs-design-patterns} were not fully
 leveraged after refactoring. The reason is that these patterns are
 so-called enabling patterns. That means they give the developers more
 options and tools to extend the functionality of the application in the
@@ -3021,8 +3014,7 @@ was queried to check if a name of some node is unique before any change
 regarding the name uniqueness. The table was intentionally kept very
 simple, so it does not use many resources when querying. More about the
 node name uniqueness rule was presented in
-\ref{dealing-with-consistency-issues}
-\nameref{dealing-with-consistency-issues}.
+\ref{dealing-with-consistency-issues}~\nameref{dealing-with-consistency-issues}.
 
 Following the refactoring, changes in the user management were easier to
 implement in the new design. Sagas and scheduled events are in the
@@ -3532,8 +3524,7 @@ is possible to easily include queues and messaging buses to the system
 to provide partitioning of command and event processing using
 asynchronous execution. This, in turn allows for scaling the read and
 write models independently of each other. As stated in
-\ref{command-query-responsibility-segregation}
-\nameref{command-query-responsibility-segregation}, the read model can
+\ref{command-query-responsibility-segregation}~\nameref{command-query-responsibility-segregation}, the read model can
 be \emph{eventually consistent} and denormalized to views, which causes
 the application to perform better.
 
@@ -3598,9 +3589,7 @@ mindset built by the traditional applications --- transaction scripts,
 immediate availability and synchronous execution.
 
 Overall, the patterns should get more of the popularity because they
-enable a lot of possibilities (some described in
-\ref{event-sourcing-and-cqrs-design-patterns}
-\nameref{event-sourcing-and-cqrs-design-patterns}) and lead to better
+enable a lot of possibilities (some described in Chapter~\ref{event-sourcing-and-cqrs-design-patterns}~\nameref{event-sourcing-and-cqrs-design-patterns}) and lead to better
 domain-oriented, scalable and available applications. The path to that
 is not easy, but it is rewarding at the end. Moreover, the clean and
 hexagonal architectures, which are more convincing than the traditional
