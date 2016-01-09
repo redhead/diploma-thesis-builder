@@ -2802,6 +2802,75 @@ system. It is fundamental to point out again, that the Event Sourcing
 pattern, as well as any other, is not all or nothing and should be used
 in appropriate places only.
 
+\subsubsection{RESTful vs CQRS and DDD}\label{restful-vs-cqrs-and-ddd}
+
+One of the concerns right at the beginning of the refactoring was the
+REST interface design and its suitability for CQRS guided by DDD,
+especially regarding the PUT method. The reasons were explained in
+detail
+in~\ref{revising-the-rest-interface}~\nameref{revising-the-rest-interface}.
+
+The original plan was not to modify the RESTful interface at all and
+find a way to determine what the intent of the PUT request is on the
+server (essentially which task needs to be done). Few ideas were
+proposed:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The server determines which fields were changed on the resource,
+  creates appropriate commands (e.g. \texttt{RenameFileCommand},
+  \texttt{MoveFileCommand}, etc.) and dispatches these individually.
+\item
+  The server dispatches a general command (e.g.
+  \texttt{UpdateFolderCommand}) and the aggregate determines which
+  fields were changed and sends individual events instead
+  (\texttt{FolderRenamedEvent}, \texttt{FolderMovedEvent}, etc.).
+\item
+  Because the UI is task-based and it knows which task it requests
+  (move, rename, add, etc.), every PUT request could specify a special
+  HTTP header that would define what command the request intents to execute.
+\end{enumerate}
+
+However, there are some problems with each of these scenarios (each
+entry of the following list relates to the respective proposition
+above):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  If each command is dispatched individually, any of them can fail
+  and leave others out of the transaction and thus out of atomic change to the
+  REST resource (which is wrong by RESTful principles).
+\item
+  It uses a general-purpose update command, and so the aggregates would
+  become CRUD-like (regardless of events).
+\item
+  It tightly couples the UI with the command handling on the server,
+  which is an implementation detail of CQRS. Also, if the REST interface
+  is used by clients other than the UI, it lays a lot of unnecessary
+  knowledge on them.
+\end{enumerate}
+
+To resolve the issue, it was decided to ask for help on StackOverflow~\cite{stackexchange}. One of the commenters suggested a method which was
+chosen for the refactoring in the end. The effects of the method were
+described
+in~\ref{revising-the-rest-interface}~\nameref{revising-the-rest-interface}.
+It is based on an idea (source~\cite{putless-rest}) that PUT requests do
+not capture intents of the tasks and so, the various tasks should be
+represented as individual resources that support only a POST method.
+This method was found to be the best approach to deal with the issues, although
+it resulted in modifying the REST interface.
+
+Later, I came across another article~\cite{cqrs-rest} that addressed the
+same issues. The suggested idea was to specify the command name in the
+\texttt{Content-Type} header of a request. Although, the article
+provided interesting reasons for this method, it still lays a lot of domain
+knowledge on the clients and exposes the internal implementation of the
+server. So, the REST interface of Integration Portal stayed as
+described above.
 
 \subsection{Testing}\label{testing}
 
