@@ -996,7 +996,7 @@ Java platform. The supporting framework should solve the common problems
 like persistence, event sourcing, integration and messaging. The
 framework should not make it difficult to integrate into an existing
 project. In the case of this thesis, it should enable the refactoring of
-Integration Portal.
+the base project.
 
 There are few frameworks that enable CQRS and ES with various features
 and in various states of quality. The following aspects were examined in
@@ -1016,7 +1016,8 @@ persistence, etc.
 The framework should be easy to incorporate into the existing code base
 without being counterproductive in the process. This means it should not
 dictate the use of specific implementations but rather be open to
-various application designs and purposes.
+various application designs and purposes. Because the base project uses Spring~\cite{spring},
+the framework's support for it is an advantage.
 
 \paragraph{Active development and
 support}\label{active-development-and-support}
@@ -2854,7 +2855,7 @@ above):
   knowledge on them.
 \end{enumerate}
 
-To resolve the issue, it was decided to ask for help on StackOverflow~\cite{stackexchange}. One of the commenters suggested a method which was
+To resolve the issue, it was decided to ask for help on StackExchange~\cite{stackexchange}. One of the commenters suggested a method which was
 chosen for the refactoring in the end. The effects of the method were
 described
 in~\ref{revising-the-rest-interface}~\nameref{revising-the-rest-interface}.
@@ -2866,7 +2867,7 @@ it resulted in modifying the REST interface.
 
 Later, I came across another article~\cite{cqrs-rest} that addressed the
 same issues. The suggested idea was to specify the command name in the
-\texttt{Content-Type} header of a request. Although, the article
+\texttt{Content-Type} header of a request by implementing \emph{Five Levels of Media Type} (see \cite{5lmt}). Although, the article
 provided interesting reasons for this method, it still lays a lot of domain
 knowledge on the clients and exposes the internal implementation of the
 server. So, the REST interface of Integration Portal stayed as
