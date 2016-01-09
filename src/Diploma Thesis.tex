@@ -1257,7 +1257,7 @@ determined by the type of the first parameter. The object can be a
 simple POJO (plain old Java object) and only the method annotations
 determine that they are command handlers.
 
-The support for Spring framework enables automatic subscription of the
+The support for Spring Framework enables automatic subscription of the
 command handlers to the command bus when the object is turned into a
 Spring bean. We can use the Spring's inversion of control container to
 inject dependencies to the command handlers.
@@ -1667,7 +1667,7 @@ communication interface for the frontend.
 \subsubsection{Frontend}\label{frontend}
 
 The front-end presentation layer of the project is a client-side
-HTML5/JavaScript application~\cite{frontend} written using AngularJS
+HTML5/JavaScript application~\cite{frontend}~\cite{frontend2} written using AngularJS
 framework~\cite{angular}. It is a so-called single-page application,
 that means the browser loads the web page only once and all the other
 communication is done using asynchronous calls to the server in the
@@ -1694,7 +1694,7 @@ information, see~\cite{ddd}.
 
 The back-end server application~\cite{backend} uses a traditional
 three-layer architecture in Java Enterprise Edition implemented using
-Spring Framework and its supporting libraries for web development,
+Spring Framework~\cite{spring} and its supporting libraries for web development,
 security, database access, and REST services. A PostreSQL database is
 used to persist the application data.
 
@@ -1765,8 +1765,8 @@ responsible for sending correct status codes in the HTTP response. These
 entry points to the back-end application are also protected by user
 authorization mechanism, so not every user is allowed to call any
 controller handler method. The controllers are implemented using Spring
-Framework MVC support and the authentication and authorization by Spring
-Security framework.
+Framework's MVC support and the authentication and authorization by Spring
+Security framework~\cite{spring-security}.
 
 \paragraph{The service layer}\label{the-service-layer}
 
@@ -2867,7 +2867,7 @@ it resulted in modifying the REST interface.
 
 Later, I came across another article~\cite{cqrs-rest} that addressed the
 same issues. The suggested idea was to specify the command name in the
-\texttt{Content-Type} header of a request by implementing \emph{Five Levels of Media Type} (see \cite{5lmt}). Although, the article
+\texttt{Content-Type} header of a request by implementing \emph{Five Levels of Media Type} (see~\cite{5lmt}). Although, the article
 provided interesting reasons for this method, it still lays a lot of domain
 knowledge on the clients and exposes the internal implementation of the
 server. So, the REST interface of Integration Portal stayed as
