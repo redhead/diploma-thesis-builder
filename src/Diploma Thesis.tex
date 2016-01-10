@@ -67,16 +67,13 @@ already used and proven to work by someone else. This knowledge allows
 them to tackle some of these common problems while making the code and
 design easy to understand, maintain, change, and extend. This applies
 not only after the project is done but also during the development of
-the software itself, where numerous problems can emerge. Choices taken
-prior to starting the development of some software, even if they were
-thought through carefully, may not take into account problems that might
-come during the development.
+the software itself, where numerous problems can emerge.
 
 In recent years, there has been a notable shift in how applications are
 run and built. More and more, applications are being moved from the
 on-premise environments to the web. This has a number of advantages,
-e.g.~the application can run on multiple devices, it supports instant
-updates, the project can target a bigger audience, etc. Cloud computing
+e.g.~the applications can run on multiple different devices, support of instant
+updates, a bigger audience to target, etc. Cloud computing
 certainly had its part in the process. Inevitably, the situation brought
 new problems into the web software development that the known patterns
 did not address in that environment, e.g.~fine-grained scalability,
@@ -151,7 +148,7 @@ sections.
 
 It's appropriate to say that neither of the two patterns implies the
 other; they can work independently. However, they nicely complement each
-other to form a very effective and powerful design for a system.
+other to form a very effective and powerful design for a system.~\cite{journey}
 
 Both design patterns were popularized by the practitioners of the
 Domain-Driven Design (DDD)~\cite{ddd} methodology for software
@@ -257,22 +254,22 @@ if they used a graph database for some part of the application instead.
 The point is that there is no single model that could be used
 universally for every possible case that the system needs to address.
 Moreover, the structure of the application data tends to change over
-time.
+time.~\cite{greg-youtube}
 
 In an event-sourced model, the structure of the current state is
 irrelevant. To make the explanation clear, let's take an example from
 bookkeeping or bank accounts where everything is stored as a list of
 accounting entries, or entries of money deposits and withdrawals. When
-you receive your bank statement, you can see that it's presented as a
-list of entries specifying what happened to your account each time a
+we receive our bank statement, we can see that it's presented as a
+list of entries specifying what happened to our account each time a
 transaction happened and how much money was involved in each
-transaction. If you take all these entries and sum them up (positive
-values for deposits, and negative for withdrawals) you get your total
+transaction. If we take all these entries and sum them up (positive
+values for deposits, and negative for withdrawals) we get our total
 account balance. This is how banks worked and are still working --- they
 keep all these entries as a history of account transactions and by
 summing them, they calculate the account balance.
 
-However, by keeping only the current state (balance of a bank account),
+If, on the other hand, only the current state (balance of a bank account) is saved,
 a lot of valuable historic data is lost, e.g.~the information about the
 time a state change happened, who invoked the change, and so on. This
 historic data may remind you of something called an audit log.
@@ -335,7 +332,7 @@ making both nodes synchronized~\cite{replica}.
 
 In summary, instead of storing the current state of the application,
 Event Sourcing primarily stores facts about changes (events) that
-happened to the application. The current state is degraded to be
+happened in the application. The current state is degraded to be
 transient, meaning that we can throw it away and build it again just by
 processing events one by one. The benefits of this design are that we
 automatically get a correct audit log (in some cases required by the
@@ -361,7 +358,7 @@ separate read model that will exist next to the original one. For
 instance, a search index of the application data, which is stored in a
 full-text-search server instead of a relational database, can be better
 in searching capabilities. The process of updating or rebuilding the the
-read models is shown in Figure~\ref{fig:projections}.
+read models is shown in Figure~\ref{fig:projections}.~\cite{greg-youtube}
 
 
 \begin{figure}[h!]
@@ -387,8 +384,8 @@ database state, however, may be impossible because of the destructive
 changes made to the production database during deployment. The original
 data for the old version may be lost forever because of the schema
 update. If the database was backed up before the deployment we can get
-the original database back. However, we would lose all the data the
-users created during the week that the new version was working.
+the original database back. However, we would lose all the changes the
+users made during the week that the new version was working.~\cite{greg-youtube}
 
 With Event Sourcing, this fallback can be accomplished easily. Since
 events must never be altered, we still have all the necessary data to
@@ -448,12 +445,12 @@ products to the user on their next visit we need the information that
 the products were removed from the cart just before checkout. If we
 designed our domain events properly we should have that information for
 every user in the system already stored as events in the event log. We
-can build this feature easily using the old events and suggest the right
+can build this feature using the old events and suggest the right
 products to each user immediately after the feature deployment. This is
 a very nice advantage over the systems that store only the current state
 because these systems do not have the data beforehand. The system
 wouldn't be able to suggest anything until the next user removes a
-product from their cart.
+product from their cart.~\cite{greg-youtube}
 
 A very similar example of a requirement that involves historic data is a
 chart of price development for a product over time. Many online shopping
@@ -473,20 +470,56 @@ the application and stored in a log. Thus, we can go back in time by
 replaying the events (similar to model rebuilding) and see what the user
 did, by looking at the events, at the exact time the bug happened. We
 can then use standard debugging tools to see what code got executed by
-the application and why it resulted in producing the bug.
+the application and why it resulted in producing the bug.~\cite{greg-youtube}
 
 Compare this feature with traditional logging. Logging is a way of
 saving events about the system execution in a textual, human-readable
 format to understand the activity of the system and to diagnose
 problems. However, this format is not very helpful if the log messages
 are not comprehensive enough, which is completely in the hands of the
-developers. Also, it is less convenient to restore the system state from
+developers. Also, it is impossible to restore the past state from
 these messages because they are, unlike in Event Sourcing, disconnected
 from the code execution.
 
 \paragraph{Testing}\label{testing}
 
-\textbf{TODO}
+As mentioned above, the structural model tends to change in development a lot.
+That means that with every change we possibly break our unit tests because they need
+to be set up with some state, which is changed by some command and verified in the end.
+To write and maintain such tests, which are based on the current-state model, can be quite cumbersome and repetitive.
+In Event Sourcing, the structural domain model is transient and based only on events and so,
+testing such domain model can be simply expressed in events too. The tests then usually follow
+the given-when-then paradigm to setup up the test, execute the code under test, and verify results.
+With Event Sourcing, such tests are established as:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{given} certain events (happened in the past);
+\item
+  \textbf{when} a command is executed;
+\item
+  \textbf{then} we expect some specific events to happen.
+\end{itemize}
+
+For a specific example, consider a test in an online shopping application --- if a product
+is put to a cart that already contains that product, the quantity of that product should be incremented:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{given} ``\emph{one Book added to cart}'' event;
+\item
+  \textbf{when} ``\emph{add Book to cart}'' command is executed;
+\item
+  \textbf{then} expect ``\emph{Book quantity changed to 2}'' event.
+\end{itemize}
+
+Notice, that this test does not know anything about the data model that is
+used underneath to process the business logic and so, it is free of
+implementation details. The test is also more readable and explicit and
+relates purely to the use cases and specification of the application.~\cite{es-testing}
+
 
 \subsubsection{Summary}\label{summary}
 
@@ -517,7 +550,7 @@ CQS (Command Query Separation) principle for designing interfaces of
 objects. CQS says that the object's methods should be either commands or
 queries. The responsibility of a query is solely to return data and not
 to alter the state of the object. On the other hand, a command should
-only change the state of the object but never return any data~\cite{journey}.
+only change the state of the object but never return any data.~\cite{journey}
 
 CQRS takes this idea and applies it to the system level where it
 strictly separates the responsibility for handling a command input (to
@@ -544,7 +577,7 @@ First is that reading the application data (querying) is not something
 that usually needs transactional invariants to be involved; that is
 something commands need to address. A query just returns data. On top of
 that, queried data are usually represented in the form of screens (or,
-based on your use cases, other types of an interface) that the users are
+based on our use cases, other types of an interface) that the users are
 presented with, so the perception of queried data on a screen can be
 different than the model used to alter the data. This model, sometimes
 called a write model, must uphold transactional invariants or business
@@ -552,7 +585,7 @@ rules of domain entities and it is usually subject to concurrent changes
 and/or multi-user collaboration.
 
 The second, more important thing is that usually it is the read side of
-your application that needs to be scaled to ensure the quality of your
+an application that needs to be scaled to ensure the quality of the
 system for a bigger audience. In many systems, a ratio of reads to
 writes can be several orders of magnitude~\cite{cap}. Instead of scaling
 everything in the system it is better to focus on the part of the
@@ -571,13 +604,13 @@ relaxing the consistency does not mean that the data is inconsistent on
 the read side. It is rather \textbf{eventually consistent}; that means
 that correct and consistent data is returned by the query at some point,
 but it just may not be immediate. The delay before the read side is
-updated is not something that would break the system in most cases.
+updated is not something that would break the system in most cases.~\cite{journey}~\cite{greg-youtube}
 
 This, however, does not apply to the write side where it is necessary to
 always operate on the current state to reliably ensure full consistency.
 This means that the write side is usually a lot harder to scale and to
 ensure being consistent at the same time. But, depending on the type of
-your system, scaling the write side is not always needed.
+the system, scaling the write side is not always needed.
 
 As a final note on reasons for using CQRS, let's mention that it enables
 the application to easily have different types of read models running in
@@ -598,7 +631,7 @@ the approach to developing software systems known as the Domain-Driven
 Design methodology (DDD). The DDD approach describes a set of techniques
 to analyze the domain of the system and to construct a conceptual model
 from the results of that analysis. This model is then used for designing
-large and complex domains and helps you solve the problems in the
+large and complex domains and helps us solve the problems in the
 domains.
 
 However, it is essential to say that DDD does not dictate the usage of
@@ -629,7 +662,7 @@ responsible for developing the system. The model is used to capture all
 of the relevant domain knowledge and to determine the scope and verify
 the consistency of that knowledge. The domain is expressed in code and
 is constantly maintained to reflect the changes as they occur in the
-evolution of the domain knowledge.
+evolution of the domain knowledge.~\cite{journey}
 
 DDD is focused primarily on the domain because that is where the value
 of the software lies from the business point of view. The role of the
@@ -648,7 +681,7 @@ language to talk about and to codify the domain to the domain model, the
 risk of confusion or misunderstanding is reduced. DDD also leverages
 that software developers are not just coding monkeys and they should
 participate in constructing the domain model together with the domain
-experts.
+experts.~\cite{journey}
 
 \paragraph{Entities and value objects}\label{entities-and-value-objects}
 
@@ -666,7 +699,7 @@ value objects. Usually, value objects are immutable, and if its
 attribute is to change the value object is replaced with a new instance.
 The difference from entities is that two entities might be equivalent in
 all their attributes, but will still be distinct; in the case of value
-objects, they would be considered equal.
+objects, they would be considered equal.~\cite{journey}
 
 \paragraph{Aggregates}\label{aggregates}
 
@@ -677,7 +710,7 @@ bounded by the lifetime of the entire aggregate. An aggregate is
 responsible for consistency and upholding the invariants (business
 rules) that are set on its components by the domain. Also, aggregates
 should not hold references to other aggregates as they should not reach
-outside their consistency boundaries.
+outside their consistency boundaries.~\cite{journey}
 
 \paragraph{Aggregate roots}\label{aggregate-roots}
 
@@ -686,7 +719,7 @@ aggregate root is the object at the top. The aggregate root is
 responsible for communication with and delegation to its child objects
 and thus, it is the only entry point to the aggregate's objects from the
 outside world. The assertion of invariants (business rules) is also its
-responsibility.
+responsibility.~\cite{journey}
 
 \paragraph{Bounded context}\label{bounded-context}
 
@@ -695,7 +728,7 @@ manage a domain model. Using a single domain model for large systems may
 be impractical, reducing consistency and comprehension. So, DDD adopts a
 concept of bounded context. A bounded context is a context for a single
 domain model. This allows us to create multiple small domain models,
-each focusing on some group of functionality of the whole system.
+each focusing on some group of functionality of the whole system.~\cite{journey}
 
 \subsubsection{The CQRS concepts}\label{the-cqrs-concepts}
 
@@ -708,7 +741,7 @@ uncertainly. Moreover, CQRS is to a greater degree a principle rather
 than a design pattern with its own terminology. However, the CQRS
 implementation established by using the domain-driven design comes with
 a new vocabulary. Some of the terms described below can be used to talk
-about DDD too and vice versa~\cite{ddd-terms}.
+about DDD too and vice versa.~\cite{ddd-terms}
 
 \paragraph{Commands}\label{commands}
 
@@ -721,7 +754,7 @@ reflect its intent because some command's intent may have different
 invariant value than other commands. Thus, it's not very wise to create
 a simple ``\emph{Update}'' command capable of updating anything, because
 it does not capture the intent of the update. This leads us to the term
-\emph{task-based user interface} which is described further below.
+\emph{task-based user interface} which is described further below.~\cite{journey}
 
 \paragraph{Command Handlers}\label{command-handlers}
 
@@ -733,7 +766,7 @@ valid command, then it should locate the aggregate instance that is the
 target of the command (or create a new aggregate if that's the command's
 intention) and call the appropriate method on the aggregate instance
 with parameters from the command. Finally, it persists the new state of
-the aggregate to storage.
+the aggregate to storage.~\cite{journey}
 
 \paragraph{Events}\label{events}
 
@@ -743,7 +776,7 @@ communication and integration, whether that be between aggregates in the
 same or other bounded contexts or with other systems or subsystems. They
 have a special meaning for Event Sourcing which will be described later.
 Events are published to subscribers that process the information that
-something has happened in the system.
+something has happened in the system.~\cite{journey}
 
 \paragraph{Event Handlers}\label{event-handlers}
 
@@ -753,7 +786,7 @@ subscriber knows how to handle. Their job is to receive an event, get
 the target aggregate and call its appropriate method. Finally, it should
 persist the new state of the aggregate to storage. Some event handlers
 do not operate on aggregates at all and are used for \emph{messaging}
-instead.
+instead.~\cite{journey}
 
 \paragraph{Messaging}\label{messaging}
 
@@ -782,7 +815,7 @@ period. So a process manager acts as a mediator between the aggregates
 conveying messages based on rules given by the process it manages.
 Usually, it holds some internal state by which it decides to send new
 events or commands to aggregates. An example of process flow of a saga
-is shown in Figure~\ref{fig:saga}.
+is shown in Figure~\ref{fig:saga}.~\cite{journey}
 
 
 \begin{figure}[h!]
@@ -842,7 +875,7 @@ integration with other systems, etc.
 
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[width=0.95\columnwidth]{figures/cqrs-detail/cqrs-detail}
+\includegraphics[width=1\columnwidth]{figures/cqrs-detail/cqrs-detail}
 \caption{View of the CQRS design in detail%
 }
 \end{center}
@@ -880,7 +913,7 @@ transition is created and applied to the aggregate. Applying the event
 results in calling the appropriate event handler in the aggregate that
 actually changes the state.
 
-Now when the aggregate is loaded, instead of using ORM layer, all the
+Now, when the aggregate is loaded, instead of using ORM layer, all the
 events published by the aggregate in the past are read and applied to a
 completely new aggregate instance. By applying all the events one by
 one, their event handlers are called appropriately and the aggregate
@@ -1617,7 +1650,7 @@ implement the \texttt{SagaManager} interface. The
 \texttt{AnnotatedSagaManager} is an implementation that uses annotations
 on the annotated sagas to manage their life cycle and event routing. A
 list of saga types is needed to configure the manager, so it knows what
-sagas it administers. Also, a saga repository must be provided to the
+sagas it administers. Also, a \emph{saga repository} must be provided to the
 manager.
 
 \paragraph{Saga Repository}\label{saga-repository}
@@ -1631,11 +1664,6 @@ implementations that handle the responsibility with different backing
 storages --- JPA, JDBC, and Mongo. The default saga repository is a
 simple in-memory implementation. When this repository is used, a saga is
 lost if JVM is shut down before the end of the saga.
-
-
-\subsubsection{Testing}\label{testing}
-
-\textbf{TODO}
 
 
 \subsection{Introduction to Integration
@@ -1728,7 +1756,7 @@ communication interface to upload and download files and it also
 supports two different types of media that the files can be stored to,
 on-line and off-line. Their types differ in speed and capacity. Rarely
 used files are automatically moved off-line to slow but high-capacity
-magnetic tapes (a manual switch is also possible) \cite{backend}. In case the file is
+magnetic tapes (a manual switch is also possible)~\cite{backend}. In case the file is
 needed again, it can be moved on-line seamlessly.
 
 \subsubsection{Architecture}\label{architecture}
@@ -3079,7 +3107,7 @@ usually follow the scheme of:
 \item
   given certain events in the past
 \item
-  when this commands executes
+  when this command is executed
 \item
   expect some events to be published
 \end{itemize}

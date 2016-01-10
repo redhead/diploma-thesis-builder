@@ -57,7 +57,7 @@ function createTasks(_, folder, options) {
 			.pipe(replace('\\subsection', '\\section'))
 			.pipe(replace('\\subsubsection', '\\subsection'))
 			.pipe(replace(/\s---\s/g, '---'))
-			.pipe(replace(/(figures\/([^\/]+)\/([^\/]+)caption\{[^%]+)/g, '$1\\label{fig:$2}'))
+			.pipe(replace(/(figures\/([^\/]+)\/([^\/\\]+)\\caption[^%]+)/g, '$1\\label{fig:$2}'))
 			.pipe(replace('\\begin{verbatim}', '\\begin{lstlisting}[caption={},label={},captionpos=b,float,floatplacement=H]'))
 			.pipe(replace('\\end{verbatim}', '\\end{lstlisting}'))
 			.pipe(gulp.dest(folder));
@@ -112,14 +112,14 @@ function createTasks(_, folder, options) {
 
 	gulptask('build', gulpseries('clean-build', 'copy', 'compile'));
 
-};
+}
 
 createTasks('_pdf', build, {links: true, zadani: true});
 createTasks('_print', print, {links: false, zadani: false});
 
 gulp.task('default', gulp.parallel(
-		gulp.series('build_pdf', 'show_pdf')
-		//,gulp.series('build_print')
+		gulp.series('build_pdf', 'show_pdf'),
+		gulp.series('build_print')
 	)
 );
 
